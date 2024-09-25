@@ -1,0 +1,19 @@
+---
+- name: Generate nginx configuration
+  hosts: remote_server
+  become: yes
+  
+  vars:
+    app_name: myapp
+    domain: example.com
+    
+  tasks:
+    - name: Create nginx configuration
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/{{ app_name }}
+    
+    - name: Enable nginx site
+      systemd:
+        name: nginx
+        state: restarted

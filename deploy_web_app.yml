@@ -1,0 +1,38 @@
+---
+- name: Deploy web application
+  hosts: remote_server
+  become: yes
+  
+  vars:
+    app_name: myapp
+    app_version: 1.0
+    
+  roles:
+    - deploy_app_files
+    - generate_nginx_config
+    - restart_nginx_if_needed
+    
+  tasks:
+    - name: Create application directory
+      file:
+        path: "/opt/{{ app_name }}"
+        state: directory
+      
+    - name: Copy docker-compose.yml
+      copy:
+        src: docker-compose.yml.j2
+        dest: /opt/{{ app_name }}/docker-compose.yml
+        
+    - name: Copy Dockerfile
+      copy:
+        src: Dockerfile.j2
+        dest: /opt/{{ app_name }}/Dockerfile
+        
+    - name: Build and run containers
+      docker_compose:
+        project_src: /opt/{{ app_name }}
+        build: yes
+        pull: yes
+        up: yes
+        detach: yes
+        recreate: yes

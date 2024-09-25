@@ -1,0 +1,20 @@
+---
+- name: Deploy application files
+  hosts: remote_server
+  become: yes
+  
+  vars:
+    app_name: myapp
+    
+  tasks:
+    - name: Copy application files
+      copy:
+        src: "{{ item.src }}"
+        dest: "/opt/{{ app_name }}/{{ item.dest }}"
+        owner: root
+        group: root
+        mode: '0644'
+      loop:
+        - { src: 'index.php', dest: '' }
+        - { src: 'config.ini', dest: '' }
+        - { src: 'public_html/*', dest: 'public_html/' }

@@ -1,0 +1,17 @@
+---
+- name: Restart nginx if needed
+  hosts: remote_server
+  become: yes
+  
+  vars:
+    app_name: myapp
+    
+  tasks:
+    - name: Check nginx status
+      command: systemctl is-active nginx
+      
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+      when: "'active' not in ansible_facts.systemd.is_active"

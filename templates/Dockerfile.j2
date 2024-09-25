@@ -1,0 +1,9 @@
+FROM nginx:alpine
+
+RUN apk add --no-cache php7-fpm
+
+COPY public_html /usr/share/nginx/html/
+
+WORKDIR /usr/share/nginx/html
+
+CMD ["php", "-S", "localhost:8000"]

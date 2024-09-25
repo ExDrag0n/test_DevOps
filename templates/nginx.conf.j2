@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name {{ domain }};
+    
+    location / {
+        root /opt/{{ app_name }}/public_html;
+        index index.php index.html index.htm;
+        
+        try_files $uri $uri/ /index.php?$query_*$;
+    }
+}
